@@ -1,6 +1,5 @@
 package me.akadeax.infinityquest;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class InfinityQuest extends JavaPlugin {
