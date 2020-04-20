@@ -1,0 +1,6 @@
+name: Infinityquest
+version: ${project.version}
+main: me.akadeax.infinityquest.InfinityQuest
+api-version: 1.13
+load: STARTUP
+authors: [TheAlphaKarp, Akadeax]
