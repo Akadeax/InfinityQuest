@@ -1,6 +1,8 @@
 package me.akadeax.infinityquest;
 
-import me.akadeax.infinityquest.customitem.CustomItem;
+import me.akadeax.infinityquest.customitem.weapon.blockableweapon.BlockableWeaponItem;
+import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbility;
+import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbilityHandler;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-//TODO: Remove, not needed for long
 public class TestCmd implements CommandExecutor {
 
     @Override
@@ -17,14 +18,18 @@ public class TestCmd implements CommandExecutor {
         if(!(sender instanceof Player)) return false;
 
         Player p = (Player)sender;
-        CustomItem newItem = new CustomItem.CustomItemBuilder("Sword!", Material.STONE_SWORD)
-                .setVendorPrice(5)
-                .setLore(Arrays.asList("Damn, finally a good sword."))
-                .build();
-        p.getInventory().addItem(newItem.createItemStack());
+
+        BlockableWeaponItem newStack = new BlockableWeaponItem(
+                "§4Nice.",
+                Material.DIAMOND_SWORD,
+                5d,
+                -2.5d,
+                "guard"
+        );
+
+        newStack.lore = Arrays.asList("ok, quite the epic sword.", "isn't it?");
+        p.getInventory().addItem(newStack.generateItemStack());
 
         return true;
     }
-
-
 }
