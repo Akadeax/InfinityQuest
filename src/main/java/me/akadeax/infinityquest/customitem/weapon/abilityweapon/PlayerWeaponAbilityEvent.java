@@ -72,6 +72,7 @@ public class PlayerWeaponAbilityEvent implements Listener {
         playerBlockTasks.put(p.getUniqueId(), new int[] { updateTask, startCooldownTask });
     }
 
+    // from here on it's basically just triggering the BLockAbility's methods at the right time
     void startBlockCooldown(Player p, BlockAbility ability) {
         onBlockCooldownStart(p, ability);
         timeUtil.repeat(() -> whileBlockCooldown(p, ability), 0, 1, currentBlockCooldownTime);
@@ -138,6 +139,8 @@ public class PlayerWeaponAbilityEvent implements Listener {
 
     }
 
+
+    // wrapper functions around using cooldown(Material.AIR) to measure ability cooldown
     private boolean hasBlockCooldown(Player p) {
         return p.hasCooldown(Material.AIR);
     }

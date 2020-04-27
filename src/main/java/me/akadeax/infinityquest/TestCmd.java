@@ -18,12 +18,12 @@ public class TestCmd implements CommandExecutor {
         Player p = (Player)sender;
 
         AbilityWeaponItem newStack = new AbilityWeaponItem.Builder<>()
-                .setDisplayName("name")
-                .setLore(Arrays.asList("Yes, very."))
+                .setDisplayName("namename")
+                .setLore(Arrays.asList("lorelore"))
                 .setMaterial(Material.DIAMOND_AXE)
                 .setAttackDamage(10d)
-                .setAttackSpeed(-2.5d)
-                .setAbility("parry")
+                .setAttackSpeed(-3.5d)
+                .setAbility("guard")
                 .build();
 
         p.getInventory().addItem(newStack.generateItemStack());

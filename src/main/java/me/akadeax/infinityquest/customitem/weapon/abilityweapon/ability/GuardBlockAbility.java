@@ -14,7 +14,7 @@ public class GuardBlockAbility extends BlockAbility {
         addDefault("blockTime", 30);
         addDefault("blockCooldownTime", 100);
 
-        addDefault("knockbackMultiplier", 2.5d);
+        addDefault("knockbackMultiplier", 3d);
     }
 
     @Override

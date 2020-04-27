@@ -48,7 +48,7 @@ public abstract class CustomItem {
         newMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
         newMeta.setUnbreakable(true);
 
-        // add lore 1:1 but with colorcode in front (in case non was specified in the actual lore)
+        // add lore 1:1 but with colorcode in front (in case none was specified in the actual lore)
         List<String> newLore = new ArrayList<>();
         for(String s : lore) {
             newLore.add("§7" + s);

@@ -14,6 +14,16 @@ public abstract class BlockAbility {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+    public double getBlockTime() {
+        return get("blockTime", Integer.class);
+    }
+    public double getBlockCooldownTime() {
+        return get("blockCooldownTime", Integer.class);
+    }
+
     private FileConfiguration config = InfinityQuest.getInstance().getConfig();
 
     // cache already used config objects for performance reasons
