@@ -8,3 +8,5 @@ authors: [TheAlphaKarp, Akadeax]
 commands:
   test:
     usage: /<command>
+  build:
+    usage: /<command>

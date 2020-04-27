@@ -1,15 +1,18 @@
-package me.akadeax.infinityquest.customitem.weapon.blockableweapon;
+package me.akadeax.infinityquest.customitem.weapon.abilityweapon;
 
 import me.akadeax.infinityquest.customitem.CustomItemType;
 import me.akadeax.infinityquest.customitem.CustomItemUtil;
-import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbility;
-import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbilityHandler;
+import me.akadeax.infinityquest.customitem.weapon.abilityweapon.ability.BlockAbility;
+import me.akadeax.infinityquest.customitem.weapon.abilityweapon.ability.BlockAbilityHandler;
 import me.akadeax.infinityquest.util.TimeUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.PacketPlayOutAnimation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,12 +28,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class PlayerBlockEvent implements Listener {
+public class PlayerWeaponAbilityEvent implements Listener {
 
     TimeUtil timeUtil;
     public FileConfiguration config;
 
-    public PlayerBlockEvent(JavaPlugin plugin) {
+    public PlayerWeaponAbilityEvent(JavaPlugin plugin) {
         config = plugin.getConfig();
         timeUtil = new TimeUtil(plugin);
     }
@@ -39,24 +42,30 @@ public class PlayerBlockEvent implements Listener {
     private Integer currentBlockCooldownTime;
 
     private HashMap<UUID, int[]> playerBlockTasks = new HashMap<>();
+
     @EventHandler
     void onPlayerBlock(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if(e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ItemStack playerHand = e.getPlayer().getInventory().getItemInMainHand();
-        if(!CustomItemUtil.isCustomItem(playerHand)) return;
+        // if in hand can't have an ability, cancel
+        if(!CustomItemUtil.getCustomItemType(playerHand).equals(CustomItemType.BLOCKABLE_WEAPON)) return;
         if(e.getHand() != EquipmentSlot.HAND || hasBlockCooldown(p)) return;
 
+        // get the ability of the player's weapon from the string stored on it
         PersistentDataContainer handContainer = CustomItemUtil.getItemContainer(playerHand);
         if(handContainer == null) return;
-        String abilityString = handContainer.get(BlockableWeaponItem.NBTKeys.blockAbility, PersistentDataType.STRING);
+        String abilityString = handContainer.get(AbilityWeaponItem.NBTKeys.blockAbility, PersistentDataType.STRING);
         BlockAbility ability = BlockAbilityHandler.getBlockAbility(abilityString);
 
+        // store both timings here
         currentBlockTime = ability.get("blockTime", Integer.class);
         currentBlockCooldownTime = ability.get("blockCooldownTime", Integer.class);
 
+        // start triggering functions of ability when they're supposed to be
         onBlockButtonPress(p, ability);
+        // store task id's so we can cancel them later
         int updateTask = timeUtil.repeat(() -> whileBlocking(p, ability), 0, 1, currentBlockTime);
         int startCooldownTask = timeUtil.runDelayed(() -> startBlockCooldown(p, ability), currentBlockTime);
 
@@ -106,10 +115,14 @@ public class PlayerBlockEvent implements Listener {
         PersistentDataContainer handContainer = CustomItemUtil.getItemContainer(hitHand);
         if(handContainer == null) return;
 
-        String abilityName = handContainer.get(BlockableWeaponItem.NBTKeys.blockAbility, PersistentDataType.STRING);
+        String abilityName = handContainer.get(AbilityWeaponItem.NBTKeys.blockAbility, PersistentDataType.STRING);
         BlockAbility hitAbility = BlockAbilityHandler.getBlockAbility(abilityName);
 
         hitAbility.onBlockerHit(hit, e, timeUtil);
+
+        EntityPlayer player = ((CraftPlayer)hit).getHandle();
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimation(player, 0);
+        player.playerConnection.sendPacket(packet);
 
         setBlockCooldown(hit, currentBlockCooldownTime);
 

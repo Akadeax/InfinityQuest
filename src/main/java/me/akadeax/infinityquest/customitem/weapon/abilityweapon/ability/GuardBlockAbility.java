@@ -1,10 +1,7 @@
-package me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability;
+package me.akadeax.infinityquest.customitem.weapon.abilityweapon.ability;
 
 import me.akadeax.infinityquest.util.TimeUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -29,6 +26,7 @@ public class GuardBlockAbility extends BlockAbility {
     @Override
     public void whileBlocking(Player p) {
         p.setVelocity(new Vector(0,p.getVelocity().getY(),0));
+        p.getWorld().spawnParticle(Particle.REDSTONE, p.getLocation(), 5, new Particle.DustOptions(Color.YELLOW, 1));
     }
 
     @Override

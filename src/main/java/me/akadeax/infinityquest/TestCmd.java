@@ -1,8 +1,6 @@
 package me.akadeax.infinityquest;
 
-import me.akadeax.infinityquest.customitem.weapon.blockableweapon.BlockableWeaponItem;
-import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbility;
-import me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability.BlockAbilityHandler;
+import me.akadeax.infinityquest.customitem.weapon.abilityweapon.AbilityWeaponItem;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,15 +17,15 @@ public class TestCmd implements CommandExecutor {
 
         Player p = (Player)sender;
 
-        BlockableWeaponItem newStack = new BlockableWeaponItem(
-                "§4Nice.",
-                Material.DIAMOND_SWORD,
-                5d,
-                -2.5d,
-                "guard"
-        );
+        AbilityWeaponItem newStack = new AbilityWeaponItem.Builder<>()
+                .setDisplayName("name")
+                .setLore(Arrays.asList("Yes, very."))
+                .setMaterial(Material.DIAMOND_AXE)
+                .setAttackDamage(10d)
+                .setAttackSpeed(-2.5d)
+                .setAbility("parry")
+                .build();
 
-        newStack.lore = Arrays.asList("ok, quite the epic sword.", "isn't it?");
         p.getInventory().addItem(newStack.generateItemStack());
 
         return true;

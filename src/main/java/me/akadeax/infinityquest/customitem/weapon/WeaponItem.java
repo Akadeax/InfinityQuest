@@ -23,8 +23,8 @@ public class WeaponItem extends CustomItem {
     public double attackDamage;
     public double attackSpeed;
 
-    public WeaponItem(String displayName, Material material, double attackDamage, double attackSpeed) {
-        super(displayName, material);
+    public WeaponItem(String displayName, Material material, List<String> lore, double attackDamage, double attackSpeed) {
+        super(displayName, material, lore);
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
     }
@@ -38,14 +38,18 @@ public class WeaponItem extends CustomItem {
         AttributeModifier mod = new AttributeModifier("generic.attackSpeed", attackSpeed, AttributeModifier.Operation.ADD_NUMBER);
         newMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, mod);
 
-        newMeta.setDisplayName("§f" + displayName);
-
         List<String> newLore = newMeta.getLore();
         if(newLore == null) newLore = new ArrayList<>();
+
+        // add attack dmg & speed as lore below the item
+        newLore.add(String.format("§fAttack damage: §4%s♥§f", attackDamage));
+
         String roundedAttackSpeed = String.format("%.1f", 1 / Math.abs(attackSpeed) * 10);
-        newLore.add(String.format("§fAttack damage: §4%s♥§f, hit speed: §a%s", attackDamage, roundedAttackSpeed));
+        newLore.add(String.format("§fAttack speed: §a%s", roundedAttackSpeed));
+
         newMeta.setLore(newLore);
 
+        // set weapon-specific NBT tags
         PersistentDataContainer container = newMeta.getPersistentDataContainer();
         container.set(CustomItem.NBTKeys.itemType, PersistentDataType.STRING, CustomItemType.WEAPON);
         container.set(NBTKeys.attackDamage, PersistentDataType.DOUBLE, attackDamage);
@@ -53,4 +57,27 @@ public class WeaponItem extends CustomItem {
         newStack.setItemMeta(newMeta);
         return newStack;
     }
+
+
+    public static class Builder<T extends Builder<T>> extends CustomItem.Builder<T> {
+
+        protected double attackDamage = 7d;
+        protected double attackSpeed = -2.5d;
+
+        public T setAttackDamage(double attackDamage) {
+            this.attackDamage = attackDamage;
+            return self();
+        }
+
+        public T setAttackSpeed(double attackSpeed) {
+            this.attackSpeed = attackSpeed;
+            return self();
+        }
+
+        @Override
+        public WeaponItem build() {
+            return new WeaponItem(displayName, material, lore, attackDamage, attackSpeed);
+        }
+    }
+
 }

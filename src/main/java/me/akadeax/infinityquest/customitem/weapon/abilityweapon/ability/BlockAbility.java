@@ -1,8 +1,7 @@
-package me.akadeax.infinityquest.customitem.weapon.blockableweapon.ability;
+package me.akadeax.infinityquest.customitem.weapon.abilityweapon.ability;
 
 import me.akadeax.infinityquest.InfinityQuest;
 import me.akadeax.infinityquest.util.TimeUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
